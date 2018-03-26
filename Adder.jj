@@ -1,0 +1,55 @@
+
+options
+{
+	LOOKAHEAD=2;
+}
+
+PARSER_BEGIN(Adder)
+
+public class Adder
+{
+	public static void main(String args[]) throws ParseException {
+		Adder parser = new Adder(System.in);
+
+		while(true) {
+			parser.parseOneLine();
+		}
+	}
+}
+
+PARSER_END(Adder)
+
+SKIP:
+{
+	" " | "\r" | "\t"
+}
+
+TOKEN:
+{
+	<NUMBER: (<DIGIT>)+> | <DIGIT:["0"-"9"]> | <EOL: "\n">
+}
+
+void parseOneLine():
+{
+	double a;
+}
+{
+	a = expr(){
+		System.out.println("well-defined");
+		System.out.println(a);
+	} <EOL> | <EOL> | <EOF>
+	{
+		System.out.println("well-defined");
+		System.exit(-1);
+	}
+}
+
+double expr():
+{
+	Token t; Token t1;
+}
+{
+	t = <NUMBER> "+" t1 = <NUMBER>{
+		return Double.parseDouble(t.toString()) + Double.parseDouble(t1.toString());
+	}
+}
